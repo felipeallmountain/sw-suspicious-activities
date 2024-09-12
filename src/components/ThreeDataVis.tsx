@@ -11,23 +11,37 @@ const ThreeDataVis = () => {
   const [selectedNodeEntity, setSelectedNodeEntity] = useState<TSwEntity>();
   const [hoverNodeEntity, setHoverNodeEntity] = useState<TSwEntity>();
 
+  /**
+   * Load .json font to be used in three.js
+   * 
+   */
   const font = useLoadFont('./Kanit Medium Regular.json');
   let mainThreeScene!: MainThreeScene;
 
+  /**
+   * Fetch data from the provided .json file
+   * 
+   */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchData = async(loadedFont: Font) => {
     const entitiesData = await getEntitiesData();
+    // init three.js logic
     mainThreeScene = new MainThreeScene(containerRef.current as HTMLDivElement, loadedFont);
     mainThreeScene.setData(entitiesData);
   }
 
+
+  /**
+   * The following methods modify 'selectedNodeEntity' and 'hoverNodeEntity'
+   * These values show the information about every node hovered or selected
+   * 
+   */
   const selectNodeData = (e: Event) => {
     const selectedEntity = (e as CustomEvent).detail as TSwEntity;
     setSelectedNodeEntity(selectedEntity);
   }
 
   const clearNodeData = () => {
-    console.log('clearr')
     setSelectedNodeEntity(undefined);
   }
 

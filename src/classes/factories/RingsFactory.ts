@@ -15,6 +15,11 @@ class RingsFactory extends Base3dObject {
     return RingsFactory.instance;
   }
 
+  /**
+   * Create rings to place on top of the dish
+   * 
+   */
+
   createRings(radius: number, numRings: number) {
     const ringFrag = radius / numRings;
     for (let i = 1; i <= numRings; i++) {

@@ -1,5 +1,5 @@
 import { Color, Group, PerspectiveCamera, Raycaster, Scene, Vector2 } from "three";
-import Slice from "../factories/SliceFactory";
+import SliceFactory from "../factories/SliceFactory";
 import RingsFactory from "../factories/RingsFactory";
 import NodeFactory from "../factories/NodeFactory";
 import { getRadians } from '@/utils/utils';
@@ -29,9 +29,14 @@ export default class DishController {
     this.raycaster = new Raycaster();
   }
 
+  /**
+   * Create the circle with each type section
+   * by getting instances of SliceFactory
+   * 
+   */
   createDishGroup(typeSections: TSwTypeSection[]) {
     typeSections.forEach((value, index) => {
-      const sliceModel =  Slice.getInstance().getSlice(
+      const sliceModel =  SliceFactory.getInstance().getSlice(
         index, new Color(this.SLICE_COLORS[index])
       );
       
@@ -46,12 +51,24 @@ export default class DishController {
     this.scene.add(this.group);
   }
 
+  /**
+   * Add rings from RingsFactory
+   * on top of the slices
+   * 
+   */
+
   createRings() {
     const rings = RingsFactory.getInstance().createRings(this.RADIUS, this.NUM_RINGS);
     rings.translateZ(this.RINGOFFSET);
     
     this.group.add(rings);    
   }
+
+  /**
+   * Get nodes from NodeFactory according to the node type
+   * 
+   * 
+   */
 
   addNodes() {
     this.slicesGroup.forEach((slice) => {
@@ -62,6 +79,7 @@ export default class DishController {
         const nodeModel = NodeFactory.getInstance().getNodeModel(type);
         const labelModel = LabelFactory.getInstance().getLabel(`${entity.type} - ${entity.id}`);
         
+        // NodeController controls actions on the created Node
         const node = new NodeController(entity, this.camera);
         node.setModel(nodeModel);
         node.setLabel(labelModel);
@@ -78,6 +96,7 @@ export default class DishController {
         node.translateY(-.5);
 
         slice.add(node);
+        // Box to check the hit area of the meshes
         // this.scene.add(node.boundingBoxHelper)
 
         this.nodesGroup.push(node);
@@ -94,6 +113,10 @@ export default class DishController {
     this.raycaster.setFromCamera(mouse, camera);
   }
 
+  /**
+   * Select the nodes that are connected to the clicked node
+   * 
+   */
   selectConnections(node: NodeController) {
     node.nodeEntity.connections.forEach(connection => {
       const connectionNode = this.nodesGroup.find(node => node.nodeEntity.id === connection.id);
@@ -104,6 +127,10 @@ export default class DishController {
     });
   }
 
+  /**
+   * Remove state from nodes that are marked as connections
+   * 
+   */
   resetConnections() {
     this.nodesGroup.forEach(node => {
       node.isConnected = false;
@@ -111,6 +138,11 @@ export default class DishController {
     });
   }
 
+  /**
+   * Evaluate Raycaster to check if the mouse is hovering meshes
+   * and act according to the state
+   * 
+   */
   checkHoverPosition() {
     const intersectsGroup = this.raycaster.intersectObjects(this.nodesGroup);
     
@@ -131,6 +163,12 @@ export default class DishController {
       }
     });
   }
+
+  /**
+   * Evaluate Raycaster to check if the mouse is on top of clicked meshes
+   * and act according to the state
+   * 
+   */
 
   checkClickPosition() {
     this.nodesGroup.forEach(node => {
@@ -153,11 +191,21 @@ export default class DishController {
     });
   }
 
+  /**
+   * Remove state from nodes that are marked as hover
+   * 
+   */
+
   resetHover() {
     this.nodesGroup.forEach(node => {
       node.dispatchUnselect('nodeOut');
     });
   }
+
+   /**
+   * Remove state from nodes that are marked as selected
+   * 
+   */
 
   resetEntities() {
     this.nodesGroup.forEach(node => {
@@ -165,6 +213,11 @@ export default class DishController {
       node.onMouseOut();
     });
   }
+
+   /**
+   * Render loop
+   * 
+   */
 
   update() {
     this.nodesGroup.forEach(node => node.update());

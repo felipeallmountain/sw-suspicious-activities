@@ -40,6 +40,12 @@ export default class NodeController extends Group {
     this.camera = camera;
   }
 
+   /**
+   * Set model from NodeFactory and get reference of the meshes
+   * to modify on different actions
+   * 
+   */
+
   setModel(groupModel: Group) {
     this.add(groupModel);
     groupModel.traverse(child => {
@@ -71,6 +77,10 @@ export default class NodeController extends Group {
     });
   }
 
+  /**
+   * Set label from the LabelFactory and fit it into the group
+   * 
+   */
   setLabel(groupLabel: Group) {
     this.labelGroup = groupLabel;
     this.labelGroup.translateZ(-.5);
@@ -82,6 +92,10 @@ export default class NodeController extends Group {
     this.labelFrameMaterial = textFrame.material as MeshBasicMaterial;
   }
 
+  /**
+   * display when the node is a connection
+   * 
+   */
   connect(connection?: TSwConnection) {
     this.labelFrameMaterial.color = new Color(this.connectColor);
     this.shadowMaterial.uniforms.shadowColor.value.set(this.connectColor);
@@ -93,6 +107,11 @@ export default class NodeController extends Group {
       this.setShaderColor(this.connectColor, connection.strength);
     }
   }
+
+  /**
+   * change color and opacity of the shaders from the node meshes
+   * 
+   */
 
   setShaderColor(color: number, opacity: number = 1) {
     this.shaderList.forEach(shader => {
@@ -125,6 +144,11 @@ export default class NodeController extends Group {
       : this.dispatchUnselect('nodeUnselected');
   }
 
+  /**
+   * Dispatch selection if is hover or clicked
+   * 
+   */
+
   dispatchSelect(eventName: 'nodeSelected' | 'nodeHover') {
     const customEvent = new CustomEvent(eventName, {
       detail: {
@@ -134,10 +158,20 @@ export default class NodeController extends Group {
     window.dispatchEvent(customEvent);
   }
 
+  /**
+   * Dispatch unselection if is hover or clicked
+   * 
+   */
+
   dispatchUnselect(eventName: 'nodeUnselected' | 'nodeOut') {
     const customEvent = new CustomEvent(eventName);
     window.dispatchEvent(customEvent);
   }
+
+  /**
+   * Animation loop
+   * 
+   */
 
   update() {
     this.labelGroup.lookAt(this.camera.position);

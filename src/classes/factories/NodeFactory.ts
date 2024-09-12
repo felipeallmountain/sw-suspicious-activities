@@ -53,6 +53,11 @@ class NodeFactory extends Base3dObject {
     this.createShadowMesh();
   }
 
+  /**
+   * Gets the mesh according to the type
+   * 
+   */
+
   getNodeModel(model: 'Character' | 'Location' | 'Object') {
     switch(model) {
       case 'Character':
@@ -65,6 +70,11 @@ class NodeFactory extends Base3dObject {
         return this.assembleModel(this.objectGroup.clone());
     }
   }
+
+   /**
+   * Shader material for the node model
+   * 
+   */
 
   createShaderMaterial(color: number) {
     return new ShaderMaterial({
@@ -79,6 +89,12 @@ class NodeFactory extends Base3dObject {
     });
   }
 
+   /**
+   * Assemble the node with the Mesh and the shadow
+   * 
+   */
+
+
   assembleModel(nodeGroup: Group) {
     this.group.position.z = 0;
     this.group.position.y = 0;
@@ -92,6 +108,11 @@ class NodeFactory extends Base3dObject {
     
     return this.group.clone();
   }
+
+  /**
+   * Mesh for the 'Character' type
+   * 
+   */
 
   createCharacterMesh() {
     const shaderMaterial = this.createShaderMaterial(0xff0000);
@@ -108,6 +129,11 @@ class NodeFactory extends Base3dObject {
     this.characterGroup.add(bodyMesh);
   }
 
+  /**
+   * Mesh for the 'Object' type
+   * 
+   */
+
   createObjectMesh() {
     const rad = this.GEOMRAD * 1.4;
     const cubeGeometry = new BoxGeometry(rad, rad, rad);
@@ -115,6 +141,11 @@ class NodeFactory extends Base3dObject {
     const cubeMesh = new Mesh(cubeGeometry, shaderMaterial);
     this.objectGroup.add(cubeMesh);
   }
+
+  /**
+   * Mesh for the 'Location' type
+   * 
+   */
 
   createLocationMesh() {
     const sphereGeometry = new SphereGeometry(this.GEOMRAD * .65, 32, 32);
@@ -128,6 +159,11 @@ class NodeFactory extends Base3dObject {
     this.locationGroup.add(sphereMesh);
     this.locationGroup.add(coneMesh);
   }
+
+  /**
+   * Mesh for the shadow
+   * 
+   */
 
   createShadowMesh() {
     const shadowMaterial = new ShaderMaterial({

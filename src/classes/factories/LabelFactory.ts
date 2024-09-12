@@ -23,6 +23,11 @@ export default class LabelFactory extends Base3dObject {
     return LabelFactory.instance;
   }
 
+  /**
+   * Gets a label to be placed on top of the nodes
+   * 
+   */
+
   getLabel(text = '') {
     this.group.clear();
     const textGeometry = new TextGeometry(text, {
