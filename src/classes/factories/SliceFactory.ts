@@ -18,6 +18,10 @@ class SliceFactory extends Base3dObject {
     return SliceFactory.instance;
   }
 
+  /**
+   * Set angle fragment according the the number of items
+   * 
+   */
   set sliceAngle(itemNumber: number) {
     this._sliceAngle = Math.PI * 2 / itemNumber;
   }
@@ -26,6 +30,10 @@ class SliceFactory extends Base3dObject {
     return this._sliceAngle;
   }
 
+  /**
+   * Create circle slice
+   * 
+   */
   createMeshes() {
     const shape = new Shape();
     shape.moveTo(0, 0);
@@ -37,6 +45,11 @@ class SliceFactory extends Base3dObject {
 
   }
 
+  /**
+   * Get slice instance with custom position and color
+   * the position takes the angle according to sliceAngle
+   * 
+   */
   getSlice(slicePosition: number, color: Color) {
     const clonedGeometry = this.geometry.clone();
     const clonedMaterial = this.material.clone();

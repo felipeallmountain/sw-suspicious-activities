@@ -8,6 +8,12 @@ class ParticlesController {
   particlesCount = 2000;
   boxSize = 30;
 
+  /**
+   * Set particles in a BufferGeometry to fly up and go
+   * back after some height is reached
+   * 
+   */
+
   init(scene: Scene) {
     this.particlesGeometry = new BufferGeometry();
     const particlesPos = [];
@@ -31,6 +37,11 @@ class ParticlesController {
 
     return this;
   }
+
+  /**
+   * Animation loop
+   * 
+   */
 
   update() {
     let i = 0;

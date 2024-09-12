@@ -27,6 +27,12 @@ class MainThreeScene {
   particlesController!: ParticlesController;
   dishController!: DishController;
 
+  /**
+   * Define main three.js elements:
+   * scene, camera, renderer and controls
+   * 
+   */
+
   constructor(container: HTMLDivElement, font: Font) {
     const { innerWidth, innerHeight } = window;
     this.scene = new Scene();
@@ -41,7 +47,10 @@ class MainThreeScene {
     this.bind();
   }
 
-
+  /**
+   * Init app when data is injected
+   * 
+   */
 
   setData(entitiesData: TSwEntity[]) {
     this.addStats();
@@ -58,6 +67,11 @@ class MainThreeScene {
     this.resize();
     this.update();
   }
+
+  /**
+   * Stats.js panel
+   * 
+   */
 
   addStats() {
     this.stats.showPanel(0);
@@ -91,6 +105,14 @@ class MainThreeScene {
     return controls;
   }
 
+  /**
+   * Factories are singletones that create 
+   * instances of 3d Meshes to be cloned inside the app
+   * in order to increase performance by having less elements
+   * on Screen
+   * 
+   */
+
   initFactories() {
     SliceFactory.getInstance().RADIUS = 8;
     SliceFactory.getInstance().sliceAngle = this.typeSectionsData.length;
@@ -99,18 +121,35 @@ class MainThreeScene {
     LabelFactory.getInstance().font = this.font;
   }
 
+  /**
+   * Controllers manage actions of the Meshes by assembling them
+   * into the main scene and wiring up interactions
+   * 
+   */
+
   initControllers() {
+    // particles to decorate the scene with an starfield
     this.particlesController = new ParticlesController();
     this.particlesController.init(this.scene);
 
     this.dishController = new DishController(this.scene, this.camera);
   }
   
+  /**
+   * DishController assembles all pieces of interaction
+   * and wire them together
+   * 
+   */
   drawObjects() {
     this.dishController.createDishGroup(this.typeSectionsData);
     this.dishController.createRings();
     this.dishController.addNodes();
   }
+
+  /**
+   * Render loop for three.js
+   * 
+   */
 
   update() {
     this.stats.update();
@@ -121,6 +160,11 @@ class MainThreeScene {
     requestAnimationFrame(this.update);
   }
 
+  /**
+   * Fit elements if window is resized
+   * 
+   */
+
   resize() {
     const { innerWidth, innerHeight } = window;
     this.renderer.setSize(innerWidth, innerHeight);
@@ -129,6 +173,11 @@ class MainThreeScene {
     this.camera.aspect = aspectRatio;
     this.camera.updateProjectionMatrix();
   }
+
+  /**
+   * Get pointer to be used with three.js Raycaster
+   * 
+   */
 
   getMousePoint(event: MouseEvent) {
     const mouse = new Vector2();
